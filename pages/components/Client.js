@@ -8,7 +8,8 @@ class Client extends Component{
     }
 
     render(){
-        const {name, status} = this.props.client
+        const {client} = this.props;
+        const {name, status} = (client || {})
         return(
             <div>
                 {name} <b>{status}</b>

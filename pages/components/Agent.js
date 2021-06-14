@@ -5,7 +5,8 @@ import Client from "./Client";
 class Agent extends Component{
 
     render(){
-        const {name, status, clients, free} = this.props.data
+        const {data} = this.props;
+        const {name, status, clients, free} = (data || {})
         return(
             <div>
                 {name} {free? 'libre':'ocupado'}
