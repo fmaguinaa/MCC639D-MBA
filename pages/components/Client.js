@@ -4,12 +4,8 @@ import {Button} from "antd";
 
 class Client extends Component{
 
-    state = {
-    }
-
     render(){
-        const {client} = this.props;
-        const {name, status} = (client || {})
+        const {name, status} = this.props
         return(
             <div>
                 {name} <b>{status}</b>

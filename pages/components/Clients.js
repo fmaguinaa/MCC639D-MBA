@@ -22,7 +22,7 @@ class Clients extends Component{
                     Agregar cliente
                 </Button>
                 {
-                    (clients||[]).map(client => <Client key={client.id} client={client}/>)
+                    (clients||[]).map(client => <Client key={client.id} {...client}/>)
                 }
             </div>
 

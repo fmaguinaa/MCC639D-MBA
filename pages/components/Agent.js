@@ -5,13 +5,12 @@ import Client from "./Client";
 class Agent extends Component{
 
     render(){
-        const {data} = this.props;
-        const {name, status, clients, free} = (data || {})
+        const {name, clients, free} = this.props
         return(
             <div>
-                {name} {free? 'libre':'ocupado'}
+                {name || ''} {free? 'libre':'ocupado'}
                 {
-                    (clients || []).map(client => <Client key={client.id} client={client}/>)
+                    (clients || []).map(client => <Client key={client.id} {...client}/>)
                 }
             </div>
         )

@@ -164,10 +164,10 @@ class Model extends Component{
                     <Clients clients={clients} addClients={this.handleAddClient}/>
                 </Col>
                 <Col span={8}>
-                    <Agent key={agentTickets.id} data={agentTickets}/>
+                    <Agent key={agentTickets.id} {...agentTickets}/>
                 </Col>
                 <Col span={8}>
-                    <Agent key={agentAlimentos.id} data={agentAlimentos}/>
+                    <Agent key={agentAlimentos.id} {...agentAlimentos}/>
                 </Col>
             </Row>
         )
