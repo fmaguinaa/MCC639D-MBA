@@ -1,9 +1,10 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import styled from 'styled-components';
 import {Button,Row, Col} from 'antd'
 
 import Agent from './Agent.js'
 import Clients from './Clients'
+import Log from './Log'
 
 const statusClient = {
     inicio: 'I',
@@ -24,6 +25,8 @@ const idAgents = {
     alimentos:'agentAlimentos'
 }
 
+const RowLeyend = (props) => <p style={{padding: '0', margin:'0'}}><b>{props.abv}</b>: {props.name}</p>
+
 class Model extends Component{
 
     state = {
@@ -31,7 +34,7 @@ class Model extends Component{
         clients: [],
         agentTickets: {},
         agentAlimentos: {},
-
+        logs:[]
     }
 
     componentDidMount() {
@@ -78,7 +81,7 @@ class Model extends Component{
     }
 
     enqueueClients = () => {
-        const {clients, agentTickets, agentAlimentos} = this.state;
+        const {clients, agentTickets, agentAlimentos, logs} = this.state;
         const updatedClients = clients.map(client=>{
             const updatedClient = {...client}
             switch(updatedClient.status){
@@ -86,6 +89,7 @@ class Model extends Component{
                     updatedClient.status = statusClient.colaTickets
                     updatedClient.agentName = agentTickets.id
                     agentTickets.clients.push(updatedClient)
+                    logs[updatedClient.id].push(statusClient.colaTickets)
                     break;
                 case statusClient.colaTickets:
                     break;
@@ -93,22 +97,25 @@ class Model extends Component{
                     updatedClient.status = statusClient.colaAlimentos
                     updatedClient.agentName = agentAlimentos.id
                     agentAlimentos.clients.push(updatedClient)
+                    logs[updatedClient.id].push(statusClient.colaAlimentos)
                     break;
                 case statusClient.colaAlimentos:
                     break;
                 case statusClient.atendidoAlimentos:
                     updatedClient.status = statusClient.fin
+                    logs[updatedClient.id].push(statusClient.fin)
                     break;
             }
             return updatedClient
         })
         this.setState({
-            clients: updatedClients
+            clients: updatedClients,
+            logs: logs
         })
     }
 
     handleAddClient = () => {
-        const {clients} = this.state;
+        const {clients, logs} = this.state;
         const id = clients.length ? clients[clients.length - 1].id + 1 : 1;
         const client = {
             id: id,
@@ -116,22 +123,26 @@ class Model extends Component{
             status: statusClient.inicio,
             agentName: ''
         }
+        logs[client.id] = [statusClient.inicio]
         clients.push(client)
         this.setState({
-            clients: clients
+            clients: clients,
+            logs: logs
         })
         this.enqueueClients()
     }
 
     changeStatusClient = (idClient, agent, status) => {
-        const {clients} = this.state;
+        const {clients, logs} = this.state;
         const indexClient = clients.findIndex(client => client.id===idClient)
         if(clients[indexClient]){
             clients[indexClient].status = status
+            logs[idClient].push(status)
             clients[indexClient].agentName = agent.id
             agent.free = true;
             this.setState({
                 clients:clients,
+                logs: logs,
                 [agent.id]:agent
             })
         }
@@ -156,20 +167,56 @@ class Model extends Component{
         }
     }
 
-    render(){
-        const {clients, agentTickets, agentAlimentos} = this.state;
+    leyend(){
         return(
-            <Row gutter={16}>
-                <Col span={8}>
-                    <Clients clients={clients} addClients={this.handleAddClient}/>
-                </Col>
-                <Col span={8}>
-                    <Agent key={agentTickets.id} {...agentTickets}/>
-                </Col>
-                <Col span={8}>
-                    <Agent key={agentAlimentos.id} {...agentAlimentos}/>
-                </Col>
-            </Row>
+            <div>
+                <RowLeyend name='Inicio' abv={statusClient.inicio}/>
+                <RowLeyend name='Cola de Tickets' abv={statusClient.colaTickets}/>
+                <RowLeyend name='Atendido Tickets' abv={statusClient.atendidoTickets}/>
+                <RowLeyend name='Cola de Alimentos' abv={statusClient.colaAlimentos}/>
+                <RowLeyend name='Atendido Alimentos' abv={statusClient.atendidoAlimentos}/>
+                <RowLeyend name='Fin' abv={statusClient.fin}/>
+            </div>
+        )
+    }
+
+    render(){
+        const {clients, agentTickets, agentAlimentos, logs} = this.state;
+        return(
+            <div>
+                <Row gutter={16}>
+                    <Col span={8}>
+                        <Clients clients={clients} addClients={this.handleAddClient}/>
+                    </Col>
+                    <Col span={8}>
+                        <Agent
+                            key={agentTickets.id}
+                            name={agentTickets.name}
+                            clients={agentTickets.clients}
+                            free={agentTickets.free}
+                        />
+                    </Col>
+                    <Col span={8}>
+                        <Agent
+                            key={agentAlimentos.id}
+                            name={agentAlimentos.name}
+                            clients={agentAlimentos.clients}
+                            free={agentAlimentos.free}
+                        />
+                    </Col>
+                </Row>
+                <Row gutter={16}>
+                    <Col span={24}>
+                        Leyenda: {this.leyend()}
+                    </Col>
+                </Row>
+                <Row gutter={16}>
+                    <Col span={24}>
+                        Registro
+                        <Log logs={logs}/>
+                    </Col>
+                </Row>
+            </div>
         )
     }
     

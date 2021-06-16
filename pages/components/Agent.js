@@ -10,7 +10,7 @@ class Agent extends Component{
             <div>
                 {name || ''} {free? 'libre':'ocupado'}
                 {
-                    (clients || []).map(client => <Client key={client.id} {...client}/>)
+                    (clients || []).map(client => <Client key={client.id} name={client.name} status={client.status}/>)
                 }
             </div>
         )

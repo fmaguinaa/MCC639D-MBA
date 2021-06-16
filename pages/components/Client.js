@@ -5,7 +5,7 @@ import {Button} from "antd";
 class Client extends Component{
 
     render(){
-        const {name, status} = this.props
+        const {name, status} = this.props;
         return(
             <div>
                 {name} <b>{status}</b>
