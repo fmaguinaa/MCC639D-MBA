@@ -2,9 +2,10 @@ import React, {Component, Fragment} from 'react';
 import styled from 'styled-components';
 import {Button,Row, Col} from 'antd'
 
-import Agent from './Agent.js'
-import Clients from './Clients'
-import Log from './Log'
+//import Agent from './Agent.js'
+//import Clients from './Clients'
+//import Log from './Log'
+//import Client from "./Client";
 
 const statusClient = {
     inicio: 'I',
@@ -26,6 +27,72 @@ const idAgents = {
 }
 
 const RowLeyend = (props) => <p style={{padding: '0', margin:'0'}}><b>{props.abv}</b>: {props.name}</p>
+
+const Log = (props) => (
+    <div>
+        {(props.logs || []).map((log,id)=><p>Cliente {id}: {log.join(' / ')}</p>)}
+    </div>
+)
+
+class Client extends Component{
+
+    render(){
+        const {name, status} = this.props;
+        return(
+            <div>
+                {name} <b>{status}</b>
+            </div>
+        )
+    }
+
+}
+
+class Agent extends Component{
+
+    render(){
+        const {name, clients, free} = this.props
+        return(
+            <div>
+                {name || ''} {free? 'libre':'ocupado'}
+                {
+                    (clients || []).map(client => <Client key={client.id} name={client.name} status={client.status}/>)
+                }
+            </div>
+        )
+    }
+
+}
+
+
+
+class Clients extends Component{
+
+    state = {
+        cola : [],
+        libre : true,
+
+    }
+
+    render(){
+        const {clients, addClients} = this.props
+        return(
+            <div>
+                <Button
+                    onClick={addClients}
+                >
+                    Agregar cliente
+                </Button>
+                {
+                    (clients||[]).map(client => <Client key={client.id} name={client.name} status={client.status}/>)
+                }
+            </div>
+
+        )
+    }
+
+}
+
+
 
 class Model extends Component{
 
