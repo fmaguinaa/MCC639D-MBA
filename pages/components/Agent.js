@@ -6,6 +6,7 @@ class Agent extends Component{
 
     render(){
         const {name, clients, free} = this.props
+        console.log(this.props)
         return(
             <div>
                 {name || ''} {free? 'libre':'ocupado'}

@@ -171,14 +171,14 @@ class Model extends Component{
 
     leyend(){
         return(
-            <div>
+            <Fragment>
                 <RowLeyend name='Inicio' abv={statusClient.inicio}/>
                 <RowLeyend name='Cola de Tickets' abv={statusClient.colaTickets}/>
                 <RowLeyend name='Atendido Tickets' abv={statusClient.atendidoTickets}/>
                 <RowLeyend name='Cola de Alimentos' abv={statusClient.colaAlimentos}/>
                 <RowLeyend name='Atendido Alimentos' abv={statusClient.atendidoAlimentos}/>
                 <RowLeyend name='Fin' abv={statusClient.fin}/>
-            </div>
+            </Fragment>
         )
     }
 
@@ -209,12 +209,17 @@ class Model extends Component{
                 </Row>
                 <Row gutter={16}>
                     <Col span={24}>
-                        Leyenda: {this.leyend()}
+                        <h4>
+                            Leyenda:
+                        </h4>
+                         {this.leyend()}
                     </Col>
                 </Row>
                 <Row gutter={16}>
                     <Col span={24}>
-                        Registro
+                        <h4>
+                            Registro
+                        </h4>
                         <Log logs={logs}/>
                     </Col>
                 </Row>
