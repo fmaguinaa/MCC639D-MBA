@@ -110,6 +110,8 @@ class Model extends Component{
         })
         this.setState({
             clients: updatedClients,
+            agentTickets: agentTickets,
+            agentAlimentos: agentAlimentos,
             logs: logs
         })
     }
